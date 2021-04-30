@@ -20,7 +20,10 @@ SELECT `stanza_id`, COUNT(`id`) AS'PRENOTATA VOLTE' FROM `prenotazioni` GROUP BY
 
 4) Fai una analisi per vedere se ci sono ore in cui le prenotazioni sono più frequenti
 
-SELECT HOUR(`created_at`),COUNT(`id`) AS'NUMERO PRENOTAZIONI' FROM `prenotazioni` GROUP BY HOUR(`created_at`)
+SELECT HOUR(`created_at`),COUNT(`id`) AS'NUMERO PRENOTAZIONI' 
+FROM `prenotazioni` 
+GROUP BY HOUR(`created_at`)
+ORDER BY `NUMERO PRENOTAZIONI`DESC
 
 
 
@@ -34,21 +37,18 @@ JOIN
 
 1) Come si chiamano gli ospiti che hanno fatto più di due prenotazioni?
 
-SELECT `ospite_id`,`name`, `lastname`,COUNT(`ospiti`.`id`) AS 'PRENOTAZIONI FATTE'
+SELECT `ospite_id`,`name`,`lastname`,COUNT(`ospiti`.`id`) AS 'PRENOTAZIONI FATTE'
 FROM `prenotazioni_has_ospiti`
 INNER JOIN `ospiti`
 ON `ospiti`.`id` = `prenotazioni_has_ospiti`.`ospite_id`
-GROUP BY `ospite_id`
-ORDER BY `PRENOTAZIONI FATTE` DESC
-WHERE `PRENOTAZIONI FATTE` > '2'
-(non mi funziona il WHERE)
+GROUP BY `prenotazioni_has_ospiti`.`ospite_id`
+HAVING `PRENOTAZIONI FATTE` > 2
 
 
 
 2) Stampare tutti gli ospiti per ogni prenotazione
 
 SELECT `prenotazione_id`,`name`,`lastname` FROM `prenotazioni_has_ospiti` INNER JOIN `ospiti` ON `prenotazioni_has_ospiti`.`ospite_id` = `ospiti`.`id`
-(non capisco dal DB se una prenotazione ha più ospiti)
 
 
 
@@ -62,7 +62,8 @@ INNER JOIN `pagamenti`
 ON `paganti`.`id` = `pagamenti`.`pagante_id`
 INNER JOIN `prenotazioni`
 ON `pagamenti`.`prenotazione_id` = `prenotazioni`.`id`
-WHERE MONTH(`prenotazioni`.`created_at`) = 05
+WHERE YEAR (`prenotazioni`.`created_at`) = 2018
+AND MONTH(`prenotazioni`.`created_at`) = 05
 
 
 
